@@ -2,4 +2,7 @@
     <string name="app_name">Set</string>
 
     <string name="reDispatch">Dispatch</string>
+    <string name="re">Recommencer ?</string>
+    <string name="quit">Quitter ?</string>
+
 </resources>

@@ -6,8 +6,6 @@ import com.tanoshi.set.object.Card;
 public interface ServiceBoard {
     Board dispatchCard(int size);
 
-    Board reDispatchCard(Board board);
-
     Card getCard(Board board, int index);
 
     Board deleteCard(Board board, int i);

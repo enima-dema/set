@@ -26,11 +26,6 @@ public class ServiceBoardImpl implements ServiceBoard {
 	}
 
 	@Override
-	public Board reDispatchCard(Board board){
-		return null;
-	}
-
-	@Override
 	public Board deleteCard(Board board, int i) {
 		Card[] cards = board.getBoard();
 		cards[i] = null;

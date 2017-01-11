@@ -1,16 +1,14 @@
 package com.tanoshi.set.client;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.PorterDuff;
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,39 +18,34 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tanoshi.set.object.Board;
-
-
 import com.tanoshi.set.R;
-import com.tanoshi.set.object.Card;
-import com.tanoshi.set.object.Set;
-import com.tanoshi.set.service.ServiceBoard;
-import com.tanoshi.set.service.ServiceCard;
-import com.tanoshi.set.service.ServiceSet;
-import com.tanoshi.set.serviceimpl.ServiceBoardImpl;
-import com.tanoshi.set.serviceimpl.ServiceCardImpl;
-import com.tanoshi.set.serviceimpl.ServiceSetImpl;
-
-import org.w3c.dom.Text;
+import com.tanoshi.set.object.BoardMin;
+import com.tanoshi.set.object.CardMin;
+import com.tanoshi.set.object.SetMin;
+import com.tanoshi.set.service.ServiceBoardMin;
+import com.tanoshi.set.service.ServiceCardMin;
+import com.tanoshi.set.service.ServiceSetMin;
+import com.tanoshi.set.serviceimpl.ServiceBoardMinImpl;
+import com.tanoshi.set.serviceimpl.ServiceCardMinImpl;
+import com.tanoshi.set.serviceimpl.ServiceSetMinImpl;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by Human Booster on 04/01/2017.
  */
 
-public class Game extends AppCompatActivity {
+public class GameMin extends AppCompatActivity {
     static int size = 12;
     static int scoreI = 0;
     Button reD;
     LinearLayout[] ll;
-    ImageView[][] iv;
+    ImageView[] iv;
     TextView timer, score;
-    Board board;
-    ServiceBoard sb = new ServiceBoardImpl();
-    ServiceSet ss = new ServiceSetImpl();
-    ServiceCard sc = new ServiceCardImpl();
+    BoardMin board;
+    ServiceBoardMin sb = new ServiceBoardMinImpl();
+    ServiceSetMin ss = new ServiceSetMinImpl();
+    ServiceCardMin sc = new ServiceCardMinImpl();
     ArrayList<Integer> answ = new ArrayList<Integer>();
 
     @Override
@@ -61,24 +54,24 @@ public class Game extends AppCompatActivity {
         setDisplay();
         linkXml();
         listen();
-        setTimer(60000);
-        ServiceBoard sb = new ServiceBoardImpl();
+        setTimer(3000);
         board = sb.dispatchCard(size);
         dispatchCards();
     }
 
-    private void setDisplay(){
-        setContentView(R.layout.game);
+    private void setDisplay() {
+        setContentView(R.layout.game_min);
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }else {
+        } else {
             View decorView = getWindow().getDecorView();
             int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
             decorView.setSystemUiVisibility(uiOptions);
         }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
+
     private void linkXml() {
         reD = (Button) findViewById(R.id.reDispatch);
 
@@ -96,46 +89,22 @@ public class Game extends AppCompatActivity {
         ll[10] = (LinearLayout) findViewById(R.id.eleven);
         ll[11] = (LinearLayout) findViewById(R.id.twelve);
 
-        iv = new ImageView[size][3];
-        iv[0][0] = (ImageView) findViewById(R.id.one1);
-        iv[0][1] = (ImageView) findViewById(R.id.one2);
-        iv[0][2] = (ImageView) findViewById(R.id.one3);
-        iv[1][0] = (ImageView) findViewById(R.id.two1);
-        iv[1][1] = (ImageView) findViewById(R.id.two2);
-        iv[1][2] = (ImageView) findViewById(R.id.two3);
-        iv[2][0] = (ImageView) findViewById(R.id.three1);
-        iv[2][1] = (ImageView) findViewById(R.id.three2);
-        iv[2][2] = (ImageView) findViewById(R.id.three3);
+        iv = new ImageView[size];
+        iv[0] = (ImageView) findViewById(R.id.one1);
+        iv[1] = (ImageView) findViewById(R.id.two1);
+        iv[2] = (ImageView) findViewById(R.id.three1);
 
-        iv[3][0] = (ImageView) findViewById(R.id.four1);
-        iv[3][1] = (ImageView) findViewById(R.id.four2);
-        iv[3][2] = (ImageView) findViewById(R.id.four3);
-        iv[4][0] = (ImageView) findViewById(R.id.five1);
-        iv[4][1] = (ImageView) findViewById(R.id.five2);
-        iv[4][2] = (ImageView) findViewById(R.id.five3);
-        iv[5][0] = (ImageView) findViewById(R.id.six1);
-        iv[5][1] = (ImageView) findViewById(R.id.six2);
-        iv[5][2] = (ImageView) findViewById(R.id.six3);
+        iv[3] = (ImageView) findViewById(R.id.four1);
+        iv[4] = (ImageView) findViewById(R.id.five1);
+        iv[5] = (ImageView) findViewById(R.id.six1);
 
-        iv[6][0] = (ImageView) findViewById(R.id.seven1);
-        iv[6][1] = (ImageView) findViewById(R.id.seven2);
-        iv[6][2] = (ImageView) findViewById(R.id.seven3);
-        iv[7][0] = (ImageView) findViewById(R.id.eight1);
-        iv[7][1] = (ImageView) findViewById(R.id.eight2);
-        iv[7][2] = (ImageView) findViewById(R.id.eight3);
-        iv[8][0] = (ImageView) findViewById(R.id.nine1);
-        iv[8][1] = (ImageView) findViewById(R.id.nine2);
-        iv[8][2] = (ImageView) findViewById(R.id.nine3);
+        iv[6] = (ImageView) findViewById(R.id.seven1);
+        iv[7] = (ImageView) findViewById(R.id.eight1);
+        iv[8] = (ImageView) findViewById(R.id.nine1);
 
-        iv[9][0] = (ImageView) findViewById(R.id.ten1);
-        iv[9][1] = (ImageView) findViewById(R.id.ten2);
-        iv[9][2] = (ImageView) findViewById(R.id.ten3);
-        iv[10][0] = (ImageView) findViewById(R.id.eleven1);
-        iv[10][1] = (ImageView) findViewById(R.id.eleven2);
-        iv[10][2] = (ImageView) findViewById(R.id.eleven3);
-        iv[11][0] = (ImageView) findViewById(R.id.twelve1);
-        iv[11][1] = (ImageView) findViewById(R.id.twelve2);
-        iv[11][2] = (ImageView) findViewById(R.id.twelve3);
+        iv[9] = (ImageView) findViewById(R.id.ten1);
+        iv[10] = (ImageView) findViewById(R.id.eleven1);
+        iv[11] = (ImageView) findViewById(R.id.twelve1);
 
         timer = (TextView) findViewById(R.id.timer);
         score = (TextView) findViewById(R.id.score);
@@ -187,14 +156,14 @@ public class Game extends AppCompatActivity {
     }
 
     private void clearBoard() {
-        for (ImageView[] iv1 : iv) {
-            for (ImageView iv2 : iv1) {
-                iv2.setImageDrawable(null);
-            }
+        answ = new ArrayList<Integer>();
+        for (int i = 0; i < size; ++i) {
+            iv[i].setImageDrawable(null);
+            setValid(i, R.drawable.border);
         }
     }
 
-    private void setCard(int index, Card card) {
+    private void setCard(int index, CardMin card) {
         //Form && Fill
         Drawable symb = ContextCompat.getDrawable(getApplication(), R.drawable.one_empty);
         switch (card.getForm()) {
@@ -238,18 +207,8 @@ public class Game extends AppCompatActivity {
                 }
                 break;
         }
-
-        //Qty
-        switch (card.getQty()) {
-            case 2:
-                iv[index][2].setImageDrawable(symb);
-            case 1:
-                iv[index][1].setImageDrawable(symb);
-            case 0:
-                iv[index][0].setImageDrawable(symb);
-        }
-
         symb = DrawableCompat.wrap(symb);
+
         //Color
         switch (card.getColor()) {
             case 0:
@@ -262,10 +221,11 @@ public class Game extends AppCompatActivity {
                 DrawableCompat.setTint(symb.mutate(), getResources().getColor(R.color.three));
                 break;
         }
+        iv[index].setImageDrawable(symb);
     }
 
     private void trySet() {
-        Set set = new Set(sb.getCard(board, answ.get(0)), sb.getCard(board, answ.get(1)),
+        SetMin set = new SetMin(sb.getCard(board, answ.get(0)), sb.getCard(board, answ.get(1)),
                 sb.getCard(board, answ.get(2)));
         if (ss.isSetValid(set)) {
             newSet();
@@ -296,7 +256,7 @@ public class Game extends AppCompatActivity {
         }
     }
 
-    private void success(){
+    private void success() {
         scoreI += 1;
         score.setText(String.valueOf(scoreI));
     }
@@ -311,8 +271,31 @@ public class Game extends AppCompatActivity {
 
             public void onFinish() {
                 timer.setText("0");
+                end();
             }
         };
         timerC.start();
+    }
+
+    private void end(){
+        endAlert();
+    }
+
+    private void endAlert(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View v = findViewById(R.id.end);
+        builder.setView(v);
+        builder.setPositiveButton(R.string.re, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        builder.setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        TextView tv = (TextView) this.findViewById(R.id.endTV);
+        tv.setText("Bravo ! Votre score est de "+score+".");
     }
 }
